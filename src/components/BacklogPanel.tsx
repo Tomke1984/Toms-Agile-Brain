@@ -58,7 +58,7 @@ function BacklogCard({ item, onToggle, onDelete }: PropsForCard) {
       <div className="backlog-content">
         <p>{item.text}</p>
         <small>
-          {item.entryTitle} · {formatDate(item.entryDate)}
+          {item.entryTitle} - {formatDate(item.entryDate)}
         </small>
       </div>
       <button
