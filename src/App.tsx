@@ -6,7 +6,7 @@ import InsightPanel from "./components/InsightPanel";
 import { generateInsight } from "./ai";
 import { createBacklogItemsForEntry } from "./coach";
 import { loadBacklogItems, loadEntries, loadInsights, saveBacklogItems, saveEntries, saveInsights } from "./storage";
-import type { BacklogItem, Entry, Insight } from "./types";
+import type { BacklogItem, BacklogStatus, Entry, Insight } from "./types";
 
 export default function App() {
   const [entries, setEntries] = useState<Entry[]>(() => loadEntries());
@@ -64,17 +64,17 @@ export default function App() {
     });
   }
 
-  function toggleBacklogItem(id: string) {
+  function moveBacklogItem(id: string, status: BacklogStatus) {
     setBacklogItems((current) =>
-      current.map((item) => {
-        if (item.id !== id) return item;
-        const isDone = item.status === "done";
-        return {
-          ...item,
-          status: isDone ? "open" : "done",
-          completedAt: isDone ? undefined : new Date().toISOString()
-        };
-      })
+      current.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              status,
+              completedAt: status === "done" ? item.completedAt ?? new Date().toISOString() : undefined
+            }
+          : item
+      )
     );
   }
 
@@ -135,7 +135,7 @@ export default function App() {
           </section>
 
           <div className="right-rail">
-            <BacklogPanel items={backlogItems} onToggle={toggleBacklogItem} onDelete={deleteBacklogItem} />
+            <BacklogPanel items={backlogItems} onMove={moveBacklogItem} onDelete={deleteBacklogItem} />
             <InsightPanel
               currentInsight={currentInsight}
               savedInsights={insights}

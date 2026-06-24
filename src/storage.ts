@@ -4,6 +4,10 @@ const entriesKey = "agile-brain.entries.v1";
 const insightsKey = "agile-brain.insights.v1";
 const backlogKey = "agile-brain.backlog.v1";
 
+type StoredBacklogItem = Omit<BacklogItem, "status"> & {
+  status: BacklogItem["status"] | "open";
+};
+
 function readJson<T>(key: string, fallback: T): T {
   const raw = window.localStorage.getItem(key);
   if (!raw) return fallback;
@@ -36,7 +40,10 @@ export function saveInsights(insights: Insight[]) {
 }
 
 export function loadBacklogItems(): BacklogItem[] {
-  return readJson<BacklogItem[]>(backlogKey, []);
+  return readJson<StoredBacklogItem[]>(backlogKey, []).map((item) => ({
+    ...item,
+    status: item.status === "open" ? "todo" : item.status
+  }));
 }
 
 export function saveBacklogItems(items: BacklogItem[]) {

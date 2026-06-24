@@ -38,7 +38,7 @@ export function createBacklogItemsForEntry(entry: Entry): BacklogItem[] {
     entryTitle: entry.title || "Untitled note",
     entryDate: entry.occurredAt,
     text: task,
-    status: "open"
+    status: "todo"
   }));
 }
 

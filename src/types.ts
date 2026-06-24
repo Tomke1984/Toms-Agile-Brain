@@ -27,6 +27,8 @@ export type BacklogItem = {
   entryTitle: string;
   entryDate: string;
   text: string;
-  status: "open" | "done";
+  status: BacklogStatus;
   completedAt?: string;
 };
+
+export type BacklogStatus = "todo" | "doing" | "waiting" | "done";
