@@ -120,7 +120,7 @@ export default function App() {
                 type="button"
                 onClick={() => setPage("followup")}
               >
-                Actions & Insights
+                Actions
               </button>
             </nav>
             {page === "notes" && (
@@ -157,10 +157,7 @@ export default function App() {
                 onDelete={deleteEntry}
               />
             </section>
-          </div>
-        ) : (
-          <div className="followup-grid">
-            <BacklogPanel items={backlogItems} onMove={moveBacklogItem} onDelete={deleteBacklogItem} />
+
             <InsightPanel
               currentInsight={currentInsight}
               savedInsights={insights}
@@ -168,6 +165,10 @@ export default function App() {
               isGenerating={isGenerating}
               onGenerate={handleGenerateInsight}
             />
+          </div>
+        ) : (
+          <div className="followup-grid">
+            <BacklogPanel items={backlogItems} onMove={moveBacklogItem} onDelete={deleteBacklogItem} />
           </div>
         )}
       </section>
