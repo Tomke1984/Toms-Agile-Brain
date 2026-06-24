@@ -1,7 +1,8 @@
-import type { Entry, Insight } from "./types";
+import type { BacklogItem, Entry, Insight } from "./types";
 
 const entriesKey = "agile-brain.entries.v1";
 const insightsKey = "agile-brain.insights.v1";
+const backlogKey = "agile-brain.backlog.v1";
 
 function readJson<T>(key: string, fallback: T): T {
   const raw = window.localStorage.getItem(key);
@@ -32,4 +33,12 @@ export function loadInsights(): Insight[] {
 
 export function saveInsights(insights: Insight[]) {
   writeJson(insightsKey, insights);
+}
+
+export function loadBacklogItems(): BacklogItem[] {
+  return readJson<BacklogItem[]>(backlogKey, []);
+}
+
+export function saveBacklogItems(items: BacklogItem[]) {
+  writeJson(backlogKey, items);
 }

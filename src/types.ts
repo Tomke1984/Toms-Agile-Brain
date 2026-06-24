@@ -19,3 +19,14 @@ export type Insight = {
   actions: string[];
   source: "local" | "ai";
 };
+
+export type BacklogItem = {
+  id: string;
+  createdAt: string;
+  entryId: string;
+  entryTitle: string;
+  entryDate: string;
+  text: string;
+  status: "open" | "done";
+  completedAt?: string;
+};

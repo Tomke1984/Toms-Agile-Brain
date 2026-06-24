@@ -88,7 +88,8 @@ h1 {
 
 .log-panel,
 .review-panel,
-.insight-panel {
+.insight-panel,
+.backlog-panel {
   border: 1px solid #d9ddd6;
   border-radius: 8px;
   background: #fffdf9;
@@ -127,6 +128,20 @@ h1 {
 .section-heading span {
   color: #64736f;
   font-size: 0.9rem;
+}
+
+.right-rail {
+  display: grid;
+  gap: 18px;
+}
+
+.count-pill {
+  border-radius: 999px;
+  background: #e6efed;
+  color: #11665c;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .entry-form,
@@ -369,7 +384,8 @@ textarea {
   gap: 10px;
 }
 
-.entry-card {
+.entry-card,
+.backlog-card {
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr) 38px;
   gap: 12px;
@@ -384,7 +400,8 @@ textarea {
   background: #f1faf7;
 }
 
-.entry-content {
+.entry-content,
+.backlog-content {
   min-width: 0;
 }
 
@@ -411,6 +428,50 @@ textarea {
   white-space: pre-wrap;
 }
 
+.backlog-list {
+  display: grid;
+  gap: 10px;
+}
+
+.backlog-card {
+  background: #ffffff;
+  padding: 10px;
+}
+
+.backlog-card.is-done {
+  background: #f7faf6;
+  opacity: 0.76;
+}
+
+.backlog-card.is-done .backlog-content p {
+  text-decoration: line-through;
+}
+
+.backlog-content p {
+  margin-bottom: 5px;
+  color: #293735;
+  line-height: 1.35;
+}
+
+.backlog-content small {
+  color: #6d7b77;
+  line-height: 1.3;
+}
+
+.done-backlog {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid #e0e4de;
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.done-backlog h3 {
+  margin-bottom: 0;
+  color: #64736f;
+  font-size: 0.85rem;
+}
+
 .empty-state {
   border: 1px dashed #c7cec8;
   border-radius: 8px;
@@ -424,9 +485,14 @@ textarea {
   padding: 14px;
 }
 
-.insight-panel {
+.insight-panel,
+.backlog-panel {
   position: sticky;
   top: 18px;
+}
+
+.insight-panel {
+  top: 360px;
 }
 
 .insight-result {
@@ -510,6 +576,14 @@ textarea {
   .insight-panel {
     position: static;
     grid-column: 1 / -1;
+  }
+
+  .right-rail {
+    grid-column: 1 / -1;
+  }
+
+  .backlog-panel {
+    position: static;
   }
 }
 

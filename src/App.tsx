@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
+import BacklogPanel from "./components/BacklogPanel";
 import EntryForm from "./components/EntryForm";
 import EntryList from "./components/EntryList";
 import InsightPanel from "./components/InsightPanel";
 import { generateInsight } from "./ai";
-import { loadEntries, loadInsights, saveEntries, saveInsights } from "./storage";
-import type { Entry, Insight } from "./types";
+import { createBacklogItemsForEntry } from "./coach";
+import { loadBacklogItems, loadEntries, loadInsights, saveBacklogItems, saveEntries, saveInsights } from "./storage";
+import type { BacklogItem, Entry, Insight } from "./types";
 
 export default function App() {
   const [entries, setEntries] = useState<Entry[]>(() => loadEntries());
   const [insights, setInsights] = useState<Insight[]>(() => loadInsights());
+  const [backlogItems, setBacklogItems] = useState<BacklogItem[]>(() => loadBacklogItems());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [currentInsight, setCurrentInsight] = useState<Insight | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -16,6 +19,7 @@ export default function App() {
 
   useEffect(() => saveEntries(entries), [entries]);
   useEffect(() => saveInsights(insights), [insights]);
+  useEffect(() => saveBacklogItems(backlogItems), [backlogItems]);
 
   const filteredEntries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -35,6 +39,7 @@ export default function App() {
 
   function addEntry(entry: Entry) {
     setEntries((current) => [entry, ...current]);
+    setBacklogItems((current) => [...createBacklogItemsForEntry(entry), ...current]);
   }
 
   function toggleEntry(id: string) {
@@ -51,11 +56,30 @@ export default function App() {
 
   function deleteEntry(id: string) {
     setEntries((current) => current.filter((entry) => entry.id !== id));
+    setBacklogItems((current) => current.filter((item) => item.entryId !== id));
     setSelectedIds((current) => {
       const next = new Set(current);
       next.delete(id);
       return next;
     });
+  }
+
+  function toggleBacklogItem(id: string) {
+    setBacklogItems((current) =>
+      current.map((item) => {
+        if (item.id !== id) return item;
+        const isDone = item.status === "done";
+        return {
+          ...item,
+          status: isDone ? "open" : "done",
+          completedAt: isDone ? undefined : new Date().toISOString()
+        };
+      })
+    );
+  }
+
+  function deleteBacklogItem(id: string) {
+    setBacklogItems((current) => current.filter((item) => item.id !== id));
   }
 
   async function handleGenerateInsight() {
@@ -110,13 +134,16 @@ export default function App() {
             />
           </section>
 
-          <InsightPanel
-            currentInsight={currentInsight}
-            savedInsights={insights}
-            selectedCount={selectedEntries.length}
-            isGenerating={isGenerating}
-            onGenerate={handleGenerateInsight}
-          />
+          <div className="right-rail">
+            <BacklogPanel items={backlogItems} onToggle={toggleBacklogItem} onDelete={deleteBacklogItem} />
+            <InsightPanel
+              currentInsight={currentInsight}
+              savedInsights={insights}
+              selectedCount={selectedEntries.length}
+              isGenerating={isGenerating}
+              onGenerate={handleGenerateInsight}
+            />
+          </div>
         </div>
       </section>
     </main>

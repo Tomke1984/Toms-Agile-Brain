@@ -1,6 +1,7 @@
 import { Check, ClipboardPenLine, Lightbulb, Mic, MicOff, Plus, Save } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent } from "react";
+import { buildFollowUpSuggestions } from "../coach";
 import type { Entry, EntryType } from "../types";
 
 const entryTypes: EntryType[] = ["Feedback", "Meeting", "Coaching", "Conversation", "Other"];
@@ -10,39 +11,6 @@ const notePrompts = [
   "Decision to remember",
   "Follow-up for me",
   "Question to revisit"
-];
-
-const followUpRules = [
-  {
-    pattern: /\b(decid|decision|agreed|commit|committed)\b/i,
-    task: "Confirm the decision and owner in writing."
-  },
-  {
-    pattern: /\b(block|blocked|stuck|risk|issue|concern)\b/i,
-    task: "Identify the next person or detail needed to unblock this."
-  },
-  {
-    pattern: /\b(feedback|heard|said|mentioned|told)\b/i,
-    task: "Turn the feedback into one specific behavior to try."
-  },
-  {
-    pattern: /\b(question|unclear|unknown|wonder|ask)\b/i,
-    task: "Ask the open question in the next related conversation."
-  },
-  {
-    pattern: /\b(meeting|sync|call|conversation|chat)\b/i,
-    task: "Send a short recap with the next step."
-  },
-  {
-    pattern: /\b(coach|coaching|mentor|learn|practice)\b/i,
-    task: "Schedule a short reflection after practicing this."
-  }
-];
-
-const defaultFollowUps = [
-  "Choose one follow-up you can complete in the next 48 hours.",
-  "Add the next action owner and due date.",
-  "Capture what changed after the follow-up."
 ];
 
 type Props = {
@@ -312,34 +280,6 @@ export default function EntryForm({ onAdd }: Props) {
       </div>
     </form>
   );
-}
-
-function buildFollowUpSuggestions(notes: string, type: EntryType) {
-  const trimmedNotes = notes.trim();
-  if (trimmedNotes.length < 12) return [];
-
-  const matchedTasks = followUpRules
-    .filter((rule) => rule.pattern.test(trimmedNotes))
-    .map((rule) => rule.task);
-
-  const suggestions = [...matchedTasks, getTypeSpecificTask(type), ...defaultFollowUps];
-
-  return Array.from(new Set(suggestions)).slice(0, 3);
-}
-
-function getTypeSpecificTask(type: EntryType) {
-  switch (type) {
-    case "Meeting":
-      return "Share the action items with anyone who needs visibility.";
-    case "Coaching":
-      return "Pick one experiment to try before the next coaching moment.";
-    case "Conversation":
-      return "Follow up with the person while the conversation is still fresh.";
-    case "Feedback":
-      return "Decide what to keep, change, or clarify from this feedback.";
-    case "Other":
-      return "Name the smallest useful next step from this note.";
-  }
 }
 
 function getSpeechErrorMessage(error: string) {
