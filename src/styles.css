@@ -55,8 +55,14 @@ button {
   gap: 12px;
 }
 
+.brand-block {
+  display: grid;
+  gap: 10px;
+}
+
 .page-tabs {
   display: inline-flex;
+  width: fit-content;
   border: 1px solid #ccd6d0;
   border-radius: 8px;
   background: #ffffff;
@@ -673,6 +679,10 @@ textarea {
 
   .top-controls {
     justify-content: stretch;
+  }
+
+  .brand-block {
+    gap: 12px;
   }
 
   .page-tabs,

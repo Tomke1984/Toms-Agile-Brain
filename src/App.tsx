@@ -102,11 +102,9 @@ export default function App() {
     <main className="app-shell">
       <section className="workspace">
         <header className="top-bar">
-          <div>
+          <div className="brand-block">
             <p className="eyebrow">Personal notes</p>
-            <h1>Agile Brain</h1>
-          </div>
-          <div className="top-controls">
+            <h1>Tom's Agile Brain</h1>
             <nav className="page-tabs" aria-label="Main views">
               <button
                 className={page === "notes" ? "is-active" : ""}
@@ -123,6 +121,8 @@ export default function App() {
                 Actions
               </button>
             </nav>
+          </div>
+          <div className="top-controls">
             {page === "notes" && (
               <input
                 className="search"
