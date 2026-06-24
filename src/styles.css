@@ -47,6 +47,37 @@ button {
   margin-bottom: 22px;
 }
 
+.top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-tabs {
+  display: inline-flex;
+  border: 1px solid #ccd6d0;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 3px;
+}
+
+.page-tabs button {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #52625e;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-weight: 800;
+}
+
+.page-tabs button.is-active {
+  background: #11665c;
+  color: #ffffff;
+}
+
 .eyebrow {
   margin: 0 0 6px;
   color: #60706d;
@@ -79,9 +110,16 @@ h1 {
   padding: 12px 14px;
 }
 
-.main-grid {
+.notes-grid {
   display: grid;
-  grid-template-columns: minmax(300px, 0.85fr) minmax(360px, 1fr) minmax(420px, 1.35fr);
+  grid-template-columns: minmax(320px, 0.75fr) minmax(420px, 1.25fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.followup-grid {
+  display: grid;
+  grid-template-columns: minmax(560px, 1fr) minmax(320px, 0.38fr);
   gap: 18px;
   align-items: start;
 }
@@ -128,11 +166,6 @@ h1 {
 .section-heading span {
   color: #64736f;
   font-size: 0.9rem;
-}
-
-.right-rail {
-  display: grid;
-  gap: 18px;
 }
 
 .count-pill {
@@ -540,12 +573,7 @@ textarea {
 
 .insight-panel,
 .backlog-panel {
-  position: sticky;
-  top: 18px;
-}
-
-.insight-panel {
-  top: 360px;
+  position: static;
 }
 
 .insight-result {
@@ -622,21 +650,9 @@ textarea {
 }
 
 @media (max-width: 1100px) {
-  .main-grid {
+  .notes-grid,
+  .followup-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .insight-panel {
-    position: static;
-    grid-column: 1 / -1;
-  }
-
-  .right-rail {
-    grid-column: 1 / -1;
-  }
-
-  .backlog-panel {
-    position: static;
   }
 
   .kanban-board {
@@ -650,9 +666,23 @@ textarea {
   }
 
   .top-bar,
-  .main-grid {
+  .notes-grid,
+  .followup-grid {
     display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .top-controls {
+    justify-content: stretch;
+  }
+
+  .page-tabs,
+  .search {
+    width: 100%;
+  }
+
+  .page-tabs button {
+    flex: 1;
   }
 
   .form-row {

@@ -8,6 +8,8 @@ import { createBacklogItemsForEntry } from "./coach";
 import { loadBacklogItems, loadEntries, loadInsights, saveBacklogItems, saveEntries, saveInsights } from "./storage";
 import type { BacklogItem, BacklogStatus, Entry, Insight } from "./types";
 
+type AppPage = "notes" | "followup";
+
 export default function App() {
   const [entries, setEntries] = useState<Entry[]>(() => loadEntries());
   const [insights, setInsights] = useState<Insight[]>(() => loadInsights());
@@ -16,6 +18,7 @@ export default function App() {
   const [currentInsight, setCurrentInsight] = useState<Insight | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState<AppPage>("notes");
 
   useEffect(() => saveEntries(entries), [entries]);
   useEffect(() => saveInsights(insights), [insights]);
@@ -103,38 +106,60 @@ export default function App() {
             <p className="eyebrow">Personal notes</p>
             <h1>Agile Brain</h1>
           </div>
-          <input
-            className="search"
-            type="search"
-            placeholder="Search notes"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
+          <div className="top-controls">
+            <nav className="page-tabs" aria-label="Main views">
+              <button
+                className={page === "notes" ? "is-active" : ""}
+                type="button"
+                onClick={() => setPage("notes")}
+              >
+                Notes
+              </button>
+              <button
+                className={page === "followup" ? "is-active" : ""}
+                type="button"
+                onClick={() => setPage("followup")}
+              >
+                Actions & Insights
+              </button>
+            </nav>
+            {page === "notes" && (
+              <input
+                className="search"
+                type="search"
+                placeholder="Search notes"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            )}
+          </div>
         </header>
 
-        <div className="main-grid">
-          <section className="log-panel">
-            <div className="section-heading">
-              <h2>Log a moment</h2>
-              <span>{entries.length} saved</span>
-            </div>
-            <EntryForm onAdd={addEntry} />
-          </section>
+        {page === "notes" ? (
+          <div className="notes-grid">
+            <section className="log-panel">
+              <div className="section-heading">
+                <h2>Log a moment</h2>
+                <span>{entries.length} saved</span>
+              </div>
+              <EntryForm onAdd={addEntry} />
+            </section>
 
-          <section className="review-panel">
-            <div className="section-heading">
-              <h2>Review notes</h2>
-              <span>{selectedIds.size} selected</span>
-            </div>
-            <EntryList
-              entries={filteredEntries}
-              selectedIds={selectedIds}
-              onToggle={toggleEntry}
-              onDelete={deleteEntry}
-            />
-          </section>
-
-          <div className="right-rail">
+            <section className="review-panel">
+              <div className="section-heading">
+                <h2>Review notes</h2>
+                <span>{selectedIds.size} selected</span>
+              </div>
+              <EntryList
+                entries={filteredEntries}
+                selectedIds={selectedIds}
+                onToggle={toggleEntry}
+                onDelete={deleteEntry}
+              />
+            </section>
+          </div>
+        ) : (
+          <div className="followup-grid">
             <BacklogPanel items={backlogItems} onMove={moveBacklogItem} onDelete={deleteBacklogItem} />
             <InsightPanel
               currentInsight={currentInsight}
@@ -144,7 +169,7 @@ export default function App() {
               onGenerate={handleGenerateInsight}
             />
           </div>
-        </div>
+        )}
       </section>
     </main>
   );
